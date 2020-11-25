@@ -99,7 +99,7 @@
         </surface>
       </collision>
     </link>
-    <link name='link_1_0'>
+    <link name='camera_link'>
       <inertial>
         <mass>0.00311427</mass>
         <inertia>
@@ -110,9 +110,40 @@
           <iyz>0</iyz>
           <izz>1.20857e-05</izz>
         </inertia>
-        <pose frame=''>0 0 0 0 -0 0</pose>
+        <pose frame=''>0 0 0 0 -0 1.57079632</pose>
       </inertial>
-      <pose frame=''>0.007573 0.353081 0.141239 0 1e-06 -1e-05</pose>
+      <sensor name='camera1' type='camera'>
+        <camera name="head">
+          <horizontal_fov>1.3962634</horizontal_fov>
+          <image>
+            <width>1280</width>
+            <height>720</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>15</update_rate>
+        <visualize>1</visualize>
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+      </sensor>
+      <pose frame=''>0.007573 0.353081 0.141239 0 1e-06 1.57079632</pose>
       <visual name='visual'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <geometry>
@@ -587,8 +618,8 @@
         </surface>
       </collision>
     </link>
-    <joint name='link_1_0_JOINT_1' type='fixed'>
-      <parent>link_1_0</parent>
+    <joint name='camera_link_JOINT_1' type='fixed'>
+      <parent>camera_link</parent>
       <child>link_1</child>
       <pose frame=''>0 0 0 0 -0 0</pose>
       <physics>
