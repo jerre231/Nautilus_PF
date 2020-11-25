@@ -3,7 +3,7 @@
     <rosparam command="load" file="$(find nemo_simulator)/param/sonar.yaml"/>
     <node name='sonar' pkg="nemo_simulator" type='sonar.py'/>
 
-    <arg name="world"  default="nemo"/>
+    <arg name="world"  default="task"/>
     <arg name="gui"  default="true"/>
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="use_sim_time" value="true"/>
