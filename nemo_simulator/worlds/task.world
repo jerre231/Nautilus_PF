@@ -127,5 +127,40 @@
           <pose>0 0 0 0 0 0</pose>
           <uri>model://house</uri>
         </include>
+        <include>
+          <name>box1</name>
+          <pose>1.975860 -8.020435 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
+        <include>
+          <name>box2</name>
+          <pose>0.893759 -8.048310 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
+        <include>
+          <name>box3</name>
+          <pose>-0.210951 -8.069660 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
+        <include>
+          <name>box4</name>
+          <pose>-4.115360 -5.482795 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
+        <include>
+          <name>box5</name>
+          <pose>-4.138615 -4.409820 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
+        <include>
+          <name>box6</name>
+          <pose>0.525398 -4.174735 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
+        <include>
+          <name>box7</name>
+          <pose>1.610120 -4.172115 0.500000 0 0 0</pose>
+          <uri>model://wood_box</uri>
+        </include>
   </world>
 </sdf>
