@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.6'>
-  <model name='roadrunner3'>
+  <model name='marlin'>
     <link name='link_1'>
       <inertial>
         <mass>5</mass>
