@@ -1,5 +1,5 @@
-# coding: utf-8
-#!/usr/bin/env python2
+#!/usr/bin/python 
+# -*- coding: utf-8 -*-
 import cv2
 import sys
 import numpy as np
@@ -33,5 +33,14 @@ class CameraHandler:
         cv2.imshow("Frontal Camera", self.img)
 
 
+
 handler = CameraHandler()
-handler.fetchImg()
+
+#EXAMPLE
+# while not rospy.is_shutdown():
+#     print(handler.fetchImg().shape)
+#     feed = handler.fetchImg()
+    
+#     cv2.imshow("feed", feed)
+#     cv2.waitKey()
+
