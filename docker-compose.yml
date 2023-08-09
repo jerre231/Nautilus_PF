@@ -1,0 +1,17 @@
+version: '3'
+services:
+
+  nemo_ws:
+    container_name: nemo_ws
+    image: ghcr.io/ufrj-nautilus/auv_ws:master
+    privileged: true
+    pull_policy: always
+    environment:
+      - DISPLAY=${DISPLAY} 
+    volumes:
+      - /home/jerre/Git/nautilus_pf/:/root/catkin_ws/src
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /etc/localtime:/etc/localtime
+    network_mode: host
+    stdin_open: true
+    tty: true
