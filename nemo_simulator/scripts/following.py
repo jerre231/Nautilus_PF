@@ -1,45 +1,69 @@
 #!/usr/bin/env python3
 import rospy
-from gazebo_msgs.msg import ModelStates
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+import cv2
 import numpy as np
-from geometry_msgs.msg import PointStamped, Twist
+from geometry_msgs.msg import Twist
 import math
 
-"""def callbackCamera(data):
-    rospy.loginfo("Received camera orientation data")
-    rate = rospy.Rate(10)  # 10 Hz
-    global """
+class FollowGreenNode:
+    def __init__(self):
+        rospy.init_node('follow_green_node', anonymous=True)
+        self.bridge = CvBridge()
+        self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+        self.sub = rospy.Subscriber('/camera/image_raw', Image, self.image_callback)
+        self.target_color = (0, 255, 0)  # Green color in BGR format
+        self.target_area = 300  # Minimum area of green blob to follow
+        self.target_distance = 1.0  # Desired distance from the green blob
 
-def callback(data):
-    rospy.loginfo("Received sonar data x=%f y=%f", data.point.x, data.point.y)
-    global sonar_data
-    sonar_data = data
+    def image_callback(self, data):
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(data, 'bgr8')
+        except Exception as e:
+            print(e)
+            return
+        
+        mask = self.create_mask(cv_image)
+        target = self.detect_target(mask)
 
-def follow_nemo():
-    global sonar_data
-    rospy.init_node('following', anonymous=True)
-    pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-    rospy.Subscriber('/sonar_data', PointStamped, callback)
-    target_distance = 1.0 # distancia desejada em relação ao nemo
+        if target is not None:
+            self.follow_target(target)
 
-    rate = rospy.Rate(10)  # 10 Hz
-    while not rospy.is_shutdown():
-        if sonar_data:
-            target_distance_x = sonar_data.point.x
-            target_distance_y = sonar_data.point.y
-            module_distance = math.sqrt(math.pow(target_distance_x, 2) + math.pow(target_distance_y, 2))
+    def create_mask(self, image):
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        lower_bound = np.array([35, 100, 100])
+        upper_bound = np.array([85, 255, 255])
+        mask = cv2.inRange(hsv, lower_bound, upper_bound)
+        mask = cv2.erode(mask, None, iterations=2)
+        mask = cv2.dilate(mask, None, iterations=2)
+        return mask
 
-            comando = Twist()
-            if (module_distance >= target_distance):
-                comando.linear.y = 0.2
-                comando.angular.z = -0.1 * target_distance_y
-            else:
-                comando.linear.y = 0
+    def detect_target(self, mask):
+        contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        for contour in contours:
+            if cv2.contourArea(contour) > self.target_area:
+                M = cv2.moments(contour)
+                cX = int(M["m10"] / M["m00"])
+                cY = int(M["m01"] / M["m00"])
+                return (cX, cY)
+        
+        return None
 
-            pub.publish(comando)
-        rate.sleep()
+    def follow_target(self, target):
+        image_center_x = 320  # Assuming image width is 640 pixels
+        angular_speed = -4 * (target[0] - image_center_x) / image_center_x
+        linear_speed = 1.7
+        
+        cmd = Twist()
+        cmd.linear.y = linear_speed
+        cmd.angular.z = angular_speed
+        self.pub.publish(cmd)
+
+def main():
+    follow_green_node = FollowGreenNode()
+    rospy.spin()
 
 if __name__ == "__main__":
-    sonar_data = None
-    follow_nemo()
-    rospy.spin()
+    main()

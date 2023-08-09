@@ -3,6 +3,7 @@
     <rosparam command="load" file="$(find nemo_simulator)/param/sonar.yaml"/>
     <node name='sonar' pkg="nemo_simulator" type='sonar.py'/>
     <node name='following' pkg="nemo_simulator" type='following.py'/>
+    <node name='cvbridge' pkg="nemo_simulator" type='cvbridge.py'/>
 
     <arg name="world"  default="task"/>
     <arg name="gui"  default="true"/>
